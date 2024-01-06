@@ -27,7 +27,8 @@ To run the app on your machine, follow these steps:
 3. Ensure Flutter and Dart SDK are correctly installed.
 
 4. Install FlutterFire CLI for enhanced functionality.
-    ```dart
+
+   
     flutter pub global activate flutterfire_cli
 5. Configure the project for Android.
 
@@ -36,11 +37,13 @@ Device: Alternatively, you can use a real Android device.
 
 *Installing Dependencies*   
 Run the following command to fetch all the necessary dependencies.
-    ```dart
+ 
+
     flutter pub get
 
 Once the project is set up and dependencies are installed, start a debugging session or run the following command.
-    ```dart
+
+
     flutter run
 
  Now, you're ready to track your goals with Savey! 🚀   
