@@ -28,8 +28,8 @@ To run the app on your machine, follow these steps:
 
 4. Install FlutterFire CLI for enhanced functionality.
 
-   
     flutter pub global activate flutterfire_cli
+    
 5. Configure the project for Android.
 
 Emulator: Set up an Android Emulator by referring to the Google Developers website.
