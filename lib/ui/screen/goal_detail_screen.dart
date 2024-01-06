@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:savey/circular_progress_bar.dart';
+import 'package:savey/ui/widgets/circular_progress_bar.dart';
 
 class GoalDetailScreen extends StatefulWidget {
   const GoalDetailScreen({super.key});
@@ -11,7 +11,7 @@ class GoalDetailScreen extends StatefulWidget {
 class _GoalDetailScreenState extends State<GoalDetailScreen> {
   @override
   Widget build(BuildContext context) {
-    double currentSavings = 5000;
+    double currentSavings = 10000;
     double targetAmount = 10000;
 
     double savingsPercentage = (currentSavings / targetAmount);
@@ -20,7 +20,7 @@ class _GoalDetailScreenState extends State<GoalDetailScreen> {
     if (savingsPercentage >= 0.8) {
       foreground = Colors.green;
     } else if (savingsPercentage >= 0.4) {
-      foreground = Colors.orange;
+      foreground = Colors.yellow;
     }
 
     String centerText = 'We have just started, way to go!';
@@ -228,7 +228,7 @@ class SavingsSplitCard extends StatelessWidget {
     'Rewards': 5000.0,
   };
 
-  final colors = [Colors.blue, Colors.green, Colors.purple];
+  final colors = [Colors.blue, Colors.brown, Colors.teal];
 
   SavingsSplitCard({super.key});
 
@@ -241,8 +241,8 @@ class SavingsSplitCard extends StatelessWidget {
       elevation: 5,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(16.0),
-          topRight: Radius.circular(16.0),
+          topLeft: Radius.circular(40.0),
+          topRight: Radius.circular(40.0),
         ),
       ),
       child: Column(
