@@ -94,7 +94,7 @@ class _CircleProgressBarState extends State<CircleProgressBar>
     final backgroundColor = widget.backgroundColor;
     final foregroundColor = widget.foregroundColor;
     return AspectRatio(
-      aspectRatio: 1,
+      aspectRatio: 5 / 4,
       child: AnimatedBuilder(
         animation: curve,
         child: Container(),
@@ -125,7 +125,7 @@ class CircleProgressBarPainter extends CustomPainter {
     required this.backgroundColor,
     required this.foregroundColor,
     required this.percentage,
-    this.strokeWidth = 5,
+    this.strokeWidth = 14,
   });
 
   @override
