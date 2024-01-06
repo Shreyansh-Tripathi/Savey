@@ -1,4 +1,6 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+
 import 'package:savey/constants/color_constants.dart';
 import 'package:savey/constants/string_constants.dart';
 
@@ -6,7 +8,10 @@ class SavingsDataSheet extends StatelessWidget {
   final Map<String, int> items;
 
   final colors = ColorConstants.colorsList;
-  SavingsDataSheet({super.key, required this.items});
+  const SavingsDataSheet({
+    Key? key,
+    required this.items,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +50,11 @@ class SavingsDataSheet extends StatelessWidget {
                 return Expanded(
                   flex: (percentage * 10).toInt(),
                   child: Container(
+                    decoration: BoxDecoration(
                     color: itemColor,
+                        borderRadius: const BorderRadius.only(
+                            topRight: Radius.circular(12),
+                            bottomRight: Radius.circular(12))),
                   ),
                 );
               }).toList(),

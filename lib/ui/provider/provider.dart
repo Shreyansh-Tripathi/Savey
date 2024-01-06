@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:savey/constants/color_constants.dart';
 import 'package:savey/data/model/goal.dart';
 import 'package:savey/data/services/firestore_service.dart';
 
@@ -7,8 +8,8 @@ class GoalProvider extends ChangeNotifier {
   final FirestoreService firestoreService = FirestoreService();
   double savingsPercentage = 0.0;
   String displayMessage = '';
-  Color foreground = Colors.red;
-  Color background = Colors.red.withOpacity(0.2);
+  Color foreground = ColorConstants.redColor;
+  Color background = ColorConstants.redColor.withOpacity(0.2);
   int totalAmountToSave = 0;
   int savedAmount = 0;
   late DateTime targetDate;
@@ -29,9 +30,9 @@ class GoalProvider extends ChangeNotifier {
     savingsPercentage = (savedAmount / totalAmountToSave);
 
     if (savingsPercentage >= 0.8) {
-      foreground = Colors.green;
+      foreground = ColorConstants.greenColor;
     } else if (savingsPercentage >= 0.4) {
-      foreground = Colors.yellow;
+      foreground = ColorConstants.yellowColor;
     }
 
     displayMessage = 'You have just started, way to go!';
@@ -42,7 +43,7 @@ class GoalProvider extends ChangeNotifier {
     } else if (savingsPercentage >= 0.4) {
       displayMessage = 'Halfway there, keep going!';
     } else {
-      foreground = Colors.red;
+      foreground = ColorConstants.redColor;
     }
 
     background = foreground.withOpacity(0.2);

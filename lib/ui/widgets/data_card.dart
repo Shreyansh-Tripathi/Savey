@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:savey/constants/color_constants.dart';
 import 'package:savey/constants/string_constants.dart';
 
 class DataCard extends StatelessWidget {
@@ -19,7 +20,7 @@ class DataCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.0),
       ),
-      color: const Color(0xFF256DEA),
+      color: ColorConstants.cardBlue,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

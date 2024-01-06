@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:savey/constants/color_constants.dart';
 import 'package:savey/constants/string_constants.dart';
 import 'package:savey/data/model/goal.dart';
 import 'package:savey/ui/provider/provider.dart';
@@ -19,7 +20,7 @@ class _GoalDetailScreenState extends State<GoalDetailScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: const Color(0xff2D2C79),
+        backgroundColor: ColorConstants.primaryColor,
         body: Consumer<GoalProvider>(
           builder: (context, provider, child) => SingleChildScrollView(
             child: StreamBuilder(
@@ -60,7 +61,6 @@ class _GoalDetailScreenState extends State<GoalDetailScreen> {
                   );
                 }
                 
-
                 final List goals = snapshot.data!.docs;
                 Goal goal = goals[0].data();
                 provider.setData(goal);
