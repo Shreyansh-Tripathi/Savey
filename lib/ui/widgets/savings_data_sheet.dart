@@ -7,11 +7,13 @@ import 'package:savey/constants/string_constants.dart';
 class SavingsDataSheet extends StatelessWidget {
   final Map<String, int> items;
 
-  final colors = ColorConstants.colorsList;
+
   const SavingsDataSheet({
     Key? key,
     required this.items,
   }) : super(key: key);
+
+  final colors = ColorConstants.colorsList;
 
   @override
   Widget build(BuildContext context) {
@@ -27,16 +29,17 @@ class SavingsDataSheet extends StatelessWidget {
         ),
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           // Header
           Container(
             padding: const EdgeInsets.all(16.0),
-            child: const Text(
+            child: Text(
               StringConstants.yourSavings,
-              style: TextStyle(
-                fontSize: 24.0,
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                    color: ColorConstants.black,
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
           ),
           Container(
@@ -50,11 +53,7 @@ class SavingsDataSheet extends StatelessWidget {
                 return Expanded(
                   flex: (percentage * 10).toInt(),
                   child: Container(
-                    decoration: BoxDecoration(
                     color: itemColor,
-                        borderRadius: const BorderRadius.only(
-                            topRight: Radius.circular(12),
-                            bottomRight: Radius.circular(12))),
                   ),
                 );
               }).toList(),
@@ -75,17 +74,11 @@ class SavingsDataSheet extends StatelessWidget {
                   ),
                   title: Text(
                     entry.key,
-                    style: const TextStyle(
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: Theme.of(context).textTheme.bodySmall,
                   ),
                   trailing: Text(
                     '${StringConstants.currencySymbol}${entry.value.toString()}',
-                    style: const TextStyle(
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: Theme.of(context).textTheme.bodySmall,
                   ),
                 );
               }).toList(),

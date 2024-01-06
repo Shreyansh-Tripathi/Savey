@@ -19,6 +19,7 @@ class MyApp extends StatelessWidget {
     return  MaterialApp(
       theme: ThemeData(
         fontFamily: 'Montserrat',
+        textTheme: ColorConstants.appTextTheme,
       ),
       debugShowCheckedModeBanner: false,
       home: ChangeNotifierProvider(

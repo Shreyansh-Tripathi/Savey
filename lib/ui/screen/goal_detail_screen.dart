@@ -22,63 +22,52 @@ class _GoalDetailScreenState extends State<GoalDetailScreen> {
       child: Scaffold(
         backgroundColor: ColorConstants.primaryColor,
         body: Consumer<GoalProvider>(
-          builder: (context, provider, child) => SingleChildScrollView(
-            child: StreamBuilder(
-              stream: provider.getGoals(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: SizedBox(
-                        width: 100,
-                        height: 100,
-                        child: CircularProgressIndicator(
-                          color: Colors.white,
-                        )),
-                  );
-                }
-                if (snapshot.hasError) {
-                  return const Center(
-                    child: Text(
-                      StringConstants.errorConnectingToDatabase,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 40,
-                      ),
-                    ),
-                  );
-                }
-                if (!snapshot.hasData) {
-                  return const Center(
-                    child: Text(
-                      StringConstants.noGoalsFound,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 40,
-                      ),
-                    ),
-                  );
-                }
-                
-                final List goals = snapshot.data!.docs;
-                Goal goal = goals[0].data();
-                provider.setData(goal);
-
-                return Column(
+          builder: (context, provider, child) => StreamBuilder(
+            stream: provider.getGoals(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: SizedBox(
+                      width: 100,
+                      height: 100,
+                      child: CircularProgressIndicator(
+                        color: ColorConstants.white,
+                      )),
+                );
+              }
+              if (snapshot.hasError) {
+                return Center(
+                  child: Text(
+                    StringConstants.errorConnectingToDatabase,
+                    style: Theme.of(context).textTheme.displayLarge,
+                  ),
+                );
+              }
+              if (!snapshot.hasData) {
+                return Center(
+                  child: Text(
+                    StringConstants.noGoalsFound,
+                    style: Theme.of(context).textTheme.displayLarge,
+                  ),
+                );
+              }
+              
+              final List goals = snapshot.data!.docs;
+              Goal goal = goals[0].data();
+              provider.setData(goal);
+          
+              return SingleChildScrollView(
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     const SizedBox(
                       height: 60,
                     ),
                     Text(
                       provider.title,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 40,
-                      ),
+                      style: Theme.of(context).textTheme.displayLarge,
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(
@@ -100,11 +89,16 @@ class _GoalDetailScreenState extends State<GoalDetailScreen> {
                                 children: [
                                   Text(
                                     '${(provider.savingsPercentage * 100).toStringAsFixed(1)}%',
-                                    style: const TextStyle(
-                                      color: Color.fromARGB(255, 209, 209, 209),
-                                      fontSize: 40.0,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                    style: provider.savingsPercentage < 1
+                                        ? Theme.of(context)
+                                            .textTheme
+                                            .displayLarge!
+                                            .copyWith(
+                                              color: ColorConstants.offWhite,
+                                            )
+                                        : Theme.of(context)
+                                            .textTheme
+                                            .displayLarge,
                                     textAlign: TextAlign.center,
                                   ),
                                 ],
@@ -119,10 +113,7 @@ class _GoalDetailScreenState extends State<GoalDetailScreen> {
                     ),
                     Text(
                       provider.displayMessage,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 15,
-                      ),
+                      style: Theme.of(context).textTheme.displaySmall,
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(
@@ -137,33 +128,27 @@ class _GoalDetailScreenState extends State<GoalDetailScreen> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
+                              Text(
                                 StringConstants.goalTitle,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style:
+                                    Theme.of(context).textTheme.displayMedium,
                                 textAlign: TextAlign.start,
                               ),
                               Text(
-                                'By ${provider.targetDate.month} ${provider.targetDate.year}',
-                                style: const TextStyle(
-                                  color: Colors.white60,
-                                  fontSize: 10.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                'By ${provider.targetDate.month}/${provider.targetDate.year}',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displaySmall!
+                                    .copyWith(
+                                        color: ColorConstants.offWhite,
+                                        fontWeight: FontWeight.w400),
                                 textAlign: TextAlign.start,
                               ),
                             ],
                           ),
                           Text(
                             '${StringConstants.currencySymbol}${provider.totalAmountToSave.toString()}',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: Theme.of(context).textTheme.displayMedium,
                             textAlign: TextAlign.start,
                           ),
                         ],
@@ -177,13 +162,11 @@ class _GoalDetailScreenState extends State<GoalDetailScreen> {
                     const SizedBox(
                       height: 30,
                     ),
-                    SavingsDataSheet(
-                      items: provider.contributions,
-                    ),
+                    SavingsDataSheet(items: provider.contributions),
                   ],
-                );
-              },
-            ),
+                ),
+              );
+            },
           ),
         ),
       ),
