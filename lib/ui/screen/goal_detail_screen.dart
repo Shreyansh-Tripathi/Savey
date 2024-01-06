@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:savey/data/model/goal.dart';
 import 'package:savey/ui/provider/provider.dart';
 import 'package:savey/ui/widgets/circular_progress_bar.dart';
 
@@ -13,35 +14,12 @@ class GoalDetailScreen extends StatefulWidget {
 class _GoalDetailScreenState extends State<GoalDetailScreen> {
   @override
   Widget build(BuildContext context) {
-    double currentSavings = 10000;
-    double targetAmount = 10000;
-
-    double savingsPercentage = (currentSavings / targetAmount);
-    Color foreground = Colors.red;
-
-    if (savingsPercentage >= 0.8) {
-      foreground = Colors.green;
-    } else if (savingsPercentage >= 0.4) {
-      foreground = Colors.yellow;
-    }
-
-    String centerText = 'We have just started, way to go!';
-    if (savingsPercentage == 1) {
-      centerText = 'Yay, you\'ve done it!';
-    } else if (savingsPercentage >= 0.8) {
-      centerText = 'Almost there, hold on for a bit!';
-    } else if (savingsPercentage >= 0.4) {
-      centerText = 'Halfway there, keep going!';
-    }
-
-    Color background = foreground.withOpacity(0.2);
-
     return SafeArea(
       child: Scaffold(
         backgroundColor: const Color(0xff2D2C79),
         body: Consumer<GoalProvider>(
           builder: (context, provider, child) => SingleChildScrollView(
-            child: StreamBuilder<Object>(
+            child: StreamBuilder(
                 stream: provider.getGoals(),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
@@ -78,6 +56,11 @@ class _GoalDetailScreenState extends State<GoalDetailScreen> {
                           )),
                     );
                   }
+
+                  final List goals = snapshot.data!.docs;
+                  Goal goal = goals[0].data;
+                  provider.getPercentage(goal.totalAmount, goal.savedAmount);
+
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -85,9 +68,9 @@ class _GoalDetailScreenState extends State<GoalDetailScreen> {
                       const SizedBox(
                         height: 60,
                       ),
-                      const Text(
-                        'Buy a Dream House',
-                        style: TextStyle(
+                      Text(
+                        goal.title,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                           fontSize: 40,
@@ -102,9 +85,9 @@ class _GoalDetailScreenState extends State<GoalDetailScreen> {
                         child: Stack(
                           children: [
                             CircleProgressBar(
-                              foregroundColor: foreground,
-                              value: savingsPercentage,
-                              backgroundColor: background,
+                              foregroundColor: provider.foreground,
+                              value: provider.savingsPercentage,
+                              backgroundColor: provider.background,
                             ),
                             Positioned.fill(
                               child: Center(
@@ -112,7 +95,7 @@ class _GoalDetailScreenState extends State<GoalDetailScreen> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      (savingsPercentage * 100)
+                                      (provider.savingsPercentage * 100)
                                           .toStringAsFixed(1),
                                       style: const TextStyle(
                                         color:
@@ -133,7 +116,7 @@ class _GoalDetailScreenState extends State<GoalDetailScreen> {
                         height: 10,
                       ),
                       Text(
-                        centerText,
+                        provider.displayMessage,
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 15,
@@ -149,10 +132,10 @@ class _GoalDetailScreenState extends State<GoalDetailScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Column(
+                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
+                               const Text(
                                   'Goal',
                                   style: TextStyle(
                                     color: Colors.white,
@@ -162,8 +145,8 @@ class _GoalDetailScreenState extends State<GoalDetailScreen> {
                                   textAlign: TextAlign.start,
                                 ),
                                 Text(
-                                  'By Jan 2025',
-                                  style: TextStyle(
+                                  'By${goal.endMonth}${goal.endYear}',
+                                  style:const  TextStyle(
                                     color: Colors.white60,
                                     fontSize: 10.0,
                                     fontWeight: FontWeight.bold,
@@ -173,7 +156,7 @@ class _GoalDetailScreenState extends State<GoalDetailScreen> {
                               ],
                             ),
                             Text(
-                              targetAmount.toString(),
+                              goal.totalAmount.toString(),
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 20.0,
@@ -200,7 +183,10 @@ class _GoalDetailScreenState extends State<GoalDetailScreen> {
 }
 
 class DataCard extends StatelessWidget {
-  const DataCard({super.key});
+  const DataCard({super.key, required this.amountLeft, required this.savePerMonth});
+
+  final int amountLeft;
+  final int savePerMonth;
 
   @override
   Widget build(BuildContext context) {
@@ -228,7 +214,7 @@ class DataCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  '1000',
+                  '' amountLeft,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 18.0,
