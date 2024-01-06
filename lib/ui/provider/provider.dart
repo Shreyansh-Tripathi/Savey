@@ -22,7 +22,7 @@ class GoalProvider extends ChangeNotifier {
       foreground = Colors.yellow;
     }
 
-    displayMessage = 'We have just started, way to go!';
+    displayMessage = 'You have just started, way to go!';
     if (savingsPercentage == 1) {
       displayMessage = 'Yay, you\'ve done it!';
     } else if (savingsPercentage >= 0.8) {
@@ -34,5 +34,58 @@ class GoalProvider extends ChangeNotifier {
     }
 
     background = foreground.withOpacity(0.2);
+  }
+
+  int calculateMonthlySavingsRequired({
+    required int goalAmount,
+    required String targetMonth,
+    required int targetYear,
+  }) {
+    DateTime currentDate = DateTime.now();
+    DateTime targetDate = DateTime(targetYear, _getMonthNumber(targetMonth));
+
+    int monthsToTarget = _calculateMonthsDifference(currentDate, targetDate);
+
+    if (monthsToTarget <= 0) {
+      return 0;
+    }
+
+    int monthlySavings = (goalAmount / monthsToTarget).ceil();
+    return monthlySavings;
+  }
+
+  static int _calculateMonthsDifference(DateTime startDate, DateTime endDate) {
+    return (endDate.year - startDate.year) * 12 +
+        endDate.month -
+        startDate.month;
+  }
+
+  static int _getMonthNumber(String month) {
+    switch (month.toLowerCase()) {
+      case 'Jan':
+        return 1;
+      case 'Feb':
+        return 2;
+      case 'Mar':
+        return 3;
+      case 'Apr':
+        return 4;
+      case 'May':
+        return 5;
+      case 'Jun':
+        return 6;
+      case 'Jul':
+        return 7;
+      case 'Aug':
+        return 8;
+      case 'Sep':
+        return 9;
+      case 'Oct':
+        return 10;
+      case 'Nov':
+        return 11;
+      default:
+        return 12;
+    }
   }
 }

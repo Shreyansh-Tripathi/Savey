@@ -3,6 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:savey/data/model/goal.dart';
 import 'package:savey/ui/provider/provider.dart';
 import 'package:savey/ui/widgets/circular_progress_bar.dart';
+import 'package:savey/ui/widgets/data_card.dart';
+import 'package:savey/ui/widgets/savings_data_sheet.dart';
+
 
 class GoalDetailScreen extends StatefulWidget {
   const GoalDetailScreen({super.key});
@@ -58,7 +61,7 @@ class _GoalDetailScreenState extends State<GoalDetailScreen> {
                   }
 
                   final List goals = snapshot.data!.docs;
-                  Goal goal = goals[0].data;
+                Goal goal = goals[0].data();
                   provider.getPercentage(goal.totalAmount, goal.savedAmount);
 
                   return Column(
@@ -132,10 +135,10 @@ class _GoalDetailScreenState extends State<GoalDetailScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                             Column(
+                          Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                               const Text(
+                              const Text(
                                   'Goal',
                                   style: TextStyle(
                                     color: Colors.white,
@@ -145,8 +148,8 @@ class _GoalDetailScreenState extends State<GoalDetailScreen> {
                                   textAlign: TextAlign.start,
                                 ),
                                 Text(
-                                  'By${goal.endMonth}${goal.endYear}',
-                                  style:const  TextStyle(
+                                'By ${goal.endMonth} ${goal.endYear}',
+                                style: const TextStyle(
                                     color: Colors.white60,
                                     fontSize: 10.0,
                                     fontWeight: FontWeight.bold,
@@ -156,7 +159,7 @@ class _GoalDetailScreenState extends State<GoalDetailScreen> {
                               ],
                             ),
                             Text(
-                              goal.totalAmount.toString(),
+                            '₹${goal.totalAmount.toString()}',
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 20.0,
@@ -167,191 +170,27 @@ class _GoalDetailScreenState extends State<GoalDetailScreen> {
                           ],
                         ),
                       ),
-                      const DataCard(),
+                    DataCard(
+                      amountLeft: goal.totalAmount - goal.savedAmount,
+                      savePerMonth: provider.calculateMonthlySavingsRequired(
+                        goalAmount: goal.totalAmount - goal.savedAmount,
+                        targetMonth: goal.endMonth,
+                        targetYear: goal.endYear,
+                      ),
+                    ),
                       const SizedBox(
                         height: 30,
                       ),
-                      SavingsSplitCard(),
-                    ],
-                  );
-                }),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class DataCard extends StatelessWidget {
-  const DataCard({super.key, required this.amountLeft, required this.savePerMonth});
-
-  final int amountLeft;
-  final int savePerMonth;
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 4.0,
-      margin: const EdgeInsets.all(16.0),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12.0),
-      ),
-      color: const Color(0xFF256DEA),
-      child: const Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Need More Savings',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.normal,
-                  ),
-                ),
-                Text(
-                  '' amountLeft,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.normal,
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Need More Savings',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.normal,
-                  ),
-                ),
-                Text(
-                  '200',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.normal,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class SavingsSplitCard extends StatelessWidget {
-  final Map<String, double> items = {
-    'Monthly Savings': 1000.0,
-    'Extra Deposits': 20000.0,
-    'Rewards': 5000.0,
-  };
-
-  final colors = [Colors.blue, Colors.brown, Colors.teal];
-
-  SavingsSplitCard({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    double totalSum = items.values.fold(0, (a, b) => a + b);
-    int i = 0;
-    int j = 0;
-    return Card(
-      elevation: 5,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(40.0),
-          topRight: Radius.circular(40.0),
-        ),
-      ),
-      child: Column(
-        children: [
-          // Header
-          Container(
-            padding: const EdgeInsets.all(16.0),
-            child: const Text(
-              'Your Savings',
-              style: TextStyle(
-                fontSize: 24.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 25),
-            height: 10.0,
-            width: double.infinity,
-            child: Row(
-              children: items.entries.map((entry) {
-                double percentage = (entry.value / totalSum) * 100;
-                Color itemColor = colors[i++];
-                return Expanded(
-                  flex: (percentage * 10).toInt(),
-                  child: Container(
-                    color: itemColor,
-                  ),
-                );
-              }).toList(),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: items.entries.map((entry) {
-                Color itemColor = colors[j++];
-                return ListTile(
-                  leading: Icon(
-                    Icons.circle,
-                    color: itemColor,
-                    size: 14,
-                  ),
-                  title: Text(
-                    entry.key,
-                    style: const TextStyle(
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.bold,
+                    SavingsDataSheet(
+                      items: goal.contributions,
                     ),
-                  ),
-                  trailing: Text(
-                    '₹${entry.value.toString()}',
-                    style: const TextStyle(
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  ],
                 );
-              }).toList(),
+              },
             ),
           ),
-        ],
+        ),
       ),
     );
-  }
-
-  List<double> calculateStops(double totalSum) {
-    List<double> stops = [];
-    double currentPercentage = 0.0;
-
-    for (double value in items.values) {
-      double percentage = (value / totalSum) * 100;
-      currentPercentage += percentage;
-      stops.add(currentPercentage / 100);
-    }
-
-    return stops;
   }
 }
