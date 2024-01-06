@@ -13,6 +13,8 @@ void main() async {
   FirebaseFirestore.instance.settings = const Settings(
     persistenceEnabled: true,
   );
+
+  // run the app
   runApp(const MyApp());
 }
 

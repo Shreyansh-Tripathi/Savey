@@ -1,5 +1,5 @@
 class Goal {
-  Map<String, Map<String, dynamic>> contributions;
+  Map<String, int> contributions;
   String endMonth;
   int endYear;
   int savedAmount;
@@ -17,8 +17,7 @@ class Goal {
 
   factory Goal.fromJson(Map<String, dynamic> json) {
     return Goal(
-      contributions:
-          Map<String, Map<String, dynamic>>.from(json['contributions']),
+      contributions: Map<String, int>.from(json['contributions']),
       endMonth: json['end_month'],
       endYear: json['end_year'],
       savedAmount: json['saved_amount'],
@@ -39,7 +38,7 @@ class Goal {
   }
 
   Goal copyWith({
-    Map<String, Map<String, dynamic>>? contributions,
+    Map<String, int>? contributions,
     String? endMonth,
     int? endYear,
     int? savedAmount,

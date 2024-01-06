@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:savey/ui/provider/provider.dart';
 import 'package:savey/ui/screen/goal_detail_screen.dart';
 
 class MyApp extends StatelessWidget {
@@ -6,9 +8,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return  MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: GoalDetailScreen(),
+      home: ChangeNotifierProvider(
+        create: (context) => GoalProvider(),
+        lazy: true,
+        child: const GoalDetailScreen(),
+      ),
     );
   }
 }

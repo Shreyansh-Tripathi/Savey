@@ -1,6 +1,5 @@
 // ignore: constant_identifier_names
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:savey/data/model/goal.dart';
 
 const GOAL_COLLECTION_REF = 'goals';
