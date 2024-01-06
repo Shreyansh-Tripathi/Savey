@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "326421174066",
+    "project_id": "savey-d1626",
+    "storage_bucket": "savey-d1626.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:326421174066:android:6dbc9be25ddfab51e0a92b",
+        "android_client_info": {
+          "package_name": "com.example.savey"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB36uFnjVmS5f40HqtVutTakZV2ucmRkkg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
