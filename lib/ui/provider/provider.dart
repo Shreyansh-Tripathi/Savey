@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:savey/data/model/goal.dart';
 import 'package:savey/data/services/firestore_service.dart';
 
 class GoalProvider extends ChangeNotifier {
@@ -8,13 +9,24 @@ class GoalProvider extends ChangeNotifier {
   String displayMessage = '';
   Color foreground = Colors.red;
   Color background = Colors.red.withOpacity(0.2);
+  int totalAmountToSave = 0;
+  int savedAmount = 0;
+  late DateTime targetDate;
+  String title = '';
+  Map<String, int> contributions = {};
 
   Stream<QuerySnapshot> getGoals() {
     return firestoreService.getGoals();
   }
 
-  void getPercentage(int targetAmount, int amount) {
-    savingsPercentage = (amount / targetAmount);
+  void setData(Goal goal) {
+    contributions = goal.contributions;
+    totalAmountToSave = goal.totalAmount;
+
+    Iterable<int> values = goal.contributions.values;
+    savedAmount = values.reduce((prevSum, value) => prevSum + value);
+
+    savingsPercentage = (savedAmount / totalAmountToSave);
 
     if (savingsPercentage >= 0.8) {
       foreground = Colors.green;
@@ -34,15 +46,13 @@ class GoalProvider extends ChangeNotifier {
     }
 
     background = foreground.withOpacity(0.2);
+
+    targetDate = DateTime(goal.endYear, _getMonthNumber(goal.endMonth));
+    title = goal.title;
   }
 
-  int calculateMonthlySavingsRequired({
-    required int goalAmount,
-    required String targetMonth,
-    required int targetYear,
-  }) {
+  int getMonthlySavingsRequired() {
     DateTime currentDate = DateTime.now();
-    DateTime targetDate = DateTime(targetYear, _getMonthNumber(targetMonth));
 
     int monthsToTarget = _calculateMonthsDifference(currentDate, targetDate);
 
@@ -50,7 +60,7 @@ class GoalProvider extends ChangeNotifier {
       return 0;
     }
 
-    int monthlySavings = (goalAmount / monthsToTarget).ceil();
+    int monthlySavings = (totalAmountToSave / monthsToTarget).ceil();
     return monthlySavings;
   }
 

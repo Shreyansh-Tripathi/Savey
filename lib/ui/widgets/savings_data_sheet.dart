@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:savey/constants/color_constants.dart';
+import 'package:savey/constants/string_constants.dart';
 
 class SavingsDataSheet extends StatelessWidget {
   final Map<String, int> items;
 
-  final colors = [Colors.blue, Colors.brown, Colors.teal];
-
+  final colors = ColorConstants.colorsList;
   SavingsDataSheet({super.key, required this.items});
 
   @override
@@ -26,7 +27,7 @@ class SavingsDataSheet extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(16.0),
             child: const Text(
-              'Your Savings',
+              StringConstants.yourSavings,
               style: TextStyle(
                 fontSize: 24.0,
                 fontWeight: FontWeight.bold,
@@ -71,7 +72,7 @@ class SavingsDataSheet extends StatelessWidget {
                     ),
                   ),
                   trailing: Text(
-                    '₹${entry.value.toString()}',
+                    '${StringConstants.currencySymbol}${entry.value.toString()}',
                     style: const TextStyle(
                       fontSize: 15.0,
                       fontWeight: FontWeight.bold,

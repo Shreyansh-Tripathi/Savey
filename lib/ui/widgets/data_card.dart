@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:savey/constants/string_constants.dart';
 
 class DataCard extends StatelessWidget {
-  const DataCard(
-      {super.key, required this.amountLeft, required this.savePerMonth});
+  const DataCard({
+    super.key,
+    required this.amountLeft,
+    required this.savePerMonth,
+  });
 
   final int amountLeft;
   final int savePerMonth;
@@ -25,15 +29,15 @@ class DataCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  'Need More Savings',
-                  style: TextStyle(
+                  StringConstants.needMoreSavings,
+                  style:  TextStyle(
                     color: Colors.white,
                     fontSize: 18.0,
                     fontWeight: FontWeight.normal,
                   ),
                 ),
                 Text(
-                  '₹$amountLeft',
+                  '${StringConstants.currencySymbol}$amountLeft',
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18.0,
@@ -47,15 +51,15 @@ class DataCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  'Save Per Month',
-                  style: TextStyle(
+                  StringConstants.savePerMonth,
+                  style:  TextStyle(
                     color: Colors.white,
                     fontSize: 18.0,
                     fontWeight: FontWeight.normal,
                   ),
                 ),
                 Text(
-                  '₹$savePerMonth',
+                  '${StringConstants.currencySymbol}$savePerMonth',
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18.0,
