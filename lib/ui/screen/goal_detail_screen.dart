@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:savey/ui/provider/provider.dart';
 import 'package:savey/ui/widgets/circular_progress_bar.dart';
 
 class GoalDetailScreen extends StatefulWidget {
@@ -33,120 +35,163 @@ class _GoalDetailScreenState extends State<GoalDetailScreen> {
     }
 
     Color background = foreground.withOpacity(0.2);
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: const Color(0xff2D2C79),
-        body: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SizedBox(
-                height: 60,
-              ),
-              const Text(
-                'Buy a Dream House',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 40,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(
-                height: 50,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Stack(
-                  children: [
-                    CircleProgressBar(
-                      foregroundColor: foreground,
-                      value: savingsPercentage,
-                      backgroundColor: background,
-                    ),
-                    Positioned.fill(
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
+        body: Consumer<GoalProvider>(
+          builder: (context, provider, child) => SingleChildScrollView(
+            child: StreamBuilder<Object>(
+                stream: provider.getGoals(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return const Center(
+                      child: Text(
+                        'Error Connecting to Database',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 40,
+                        ),
+                      ),
+                    );
+                  }
+                  if (!snapshot.hasData) {
+                    return const Center(
+                      child: Text(
+                        'No Goals Found',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 40,
+                        ),
+                      ),
+                    );
+                  }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: SizedBox(
+                          width: 100,
+                          height: 100,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                          )),
+                    );
+                  }
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const SizedBox(
+                        height: 60,
+                      ),
+                      const Text(
+                        'Buy a Dream House',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 40,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(
+                        height: 50,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Stack(
                           children: [
-                            Text(
-                              (savingsPercentage * 100).toStringAsFixed(1),
-                              style: const TextStyle(
-                                color: Color.fromARGB(255, 209, 209, 209),
-                                fontSize: 20.0,
-                                fontWeight: FontWeight.bold,
+                            CircleProgressBar(
+                              foregroundColor: foreground,
+                              value: savingsPercentage,
+                              backgroundColor: background,
+                            ),
+                            Positioned.fill(
+                              child: Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      (savingsPercentage * 100)
+                                          .toStringAsFixed(1),
+                                      style: const TextStyle(
+                                        color:
+                                            Color.fromARGB(255, 209, 209, 209),
+                                        fontSize: 20.0,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ],
+                                ),
                               ),
-                              textAlign: TextAlign.center,
                             ),
                           ],
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Text(
-                centerText,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 15,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(
-                height: 40,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Goal',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          textAlign: TextAlign.start,
-                        ),
-                        Text(
-                          'By Jan 2025',
-                          style: TextStyle(
-                            color: Colors.white60,
-                            fontSize: 10.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          textAlign: TextAlign.start,
-                        ),
-                      ],
-                    ),
-                    Text(
-                      targetAmount.toString(),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
+                      const SizedBox(
+                        height: 10,
                       ),
-                      textAlign: TextAlign.start,
-                    ),
-                  ],
-                ),
-              ),
-              const DataCard(),
-              const SizedBox(
-                height: 30,
-              ),
-              SavingsSplitCard(),
-            ],
+                      Text(
+                        centerText,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(
+                        height: 40,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 40),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Goal',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.start,
+                                ),
+                                Text(
+                                  'By Jan 2025',
+                                  style: TextStyle(
+                                    color: Colors.white60,
+                                    fontSize: 10.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.start,
+                                ),
+                              ],
+                            ),
+                            Text(
+                              targetAmount.toString(),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textAlign: TextAlign.start,
+                            ),
+                          ],
+                        ),
+                      ),
+                      const DataCard(),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      SavingsSplitCard(),
+                    ],
+                  );
+                }),
           ),
         ),
       ),
