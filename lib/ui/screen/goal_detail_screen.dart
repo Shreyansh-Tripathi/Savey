@@ -25,6 +25,16 @@ class _GoalDetailScreenState extends State<GoalDetailScreen> {
             child: StreamBuilder(
               stream: provider.getGoals(),
               builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: SizedBox(
+                        width: 100,
+                        height: 100,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                        )),
+                  );
+                }
                 if (snapshot.hasError) {
                   return const Center(
                     child: Text(
@@ -49,16 +59,7 @@ class _GoalDetailScreenState extends State<GoalDetailScreen> {
                     ),
                   );
                 }
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: SizedBox(
-                        width: 100,
-                        height: 100,
-                        child: CircularProgressIndicator(
-                          color: Colors.white,
-                        )),
-                  );
-                }
+                
 
                 final List goals = snapshot.data!.docs;
                 Goal goal = goals[0].data();
