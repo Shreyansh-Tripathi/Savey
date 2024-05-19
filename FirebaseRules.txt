@@ -1,0 +1,12 @@
+The rules are simple as they have been kept for Testing purpose so anyone with the correct Collection reference can access it (read only)
+
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /{document=**} {
+      allow read: if request.time < timestamp.date(2024, 2, 5);
+    }
+  }
+}

@@ -65,13 +65,13 @@ class GoalProvider extends ChangeNotifier {
     return monthlySavings;
   }
 
-  static int _calculateMonthsDifference(DateTime startDate, DateTime endDate) {
+  int _calculateMonthsDifference(DateTime startDate, DateTime endDate) {
     return (endDate.year - startDate.year) * 12 +
         endDate.month -
         startDate.month;
   }
 
-  static int _getMonthNumber(String month) {
+  int _getMonthNumber(String month) {
     switch (month.toLowerCase()) {
       case 'Jan':
         return 1;
